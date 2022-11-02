@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from typing import Optional
 from enum import Enum
+from pydantic import BaseModel
 
 
 app = FastAPI()
@@ -33,10 +34,21 @@ def comments(id):
     return {"data": {"1", "2"}}
 
 
+class BlogModel(BaseModel):
+    title: str
+    text: str
+    published: bool | None = None
+
+
+@app.post("/blog")
+def create_blog(blog: BlogModel):
+    return {"data": f"blog created with title as '{blog.title}'"}
+
+
 class ModelName(str, Enum):
-    product = "product"
-    colection = "colection"
-    category = "category"
+    product = "blog"
+    colection = "comments"
+    category = "authors"
 
 
 @app.get("/model/{model_name}")
