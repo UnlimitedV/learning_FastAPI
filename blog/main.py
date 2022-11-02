@@ -2,7 +2,8 @@ from fastapi import FastAPI
 
 from typing import Optional
 from enum import Enum
-from pydantic import BaseModel
+
+from .schemas import BlogModel
 
 
 app = FastAPI()
@@ -32,12 +33,6 @@ def show(id: int):
 def comments(id):
     # fetch coments for blog with id = id
     return {"data": {"1", "2"}}
-
-
-class BlogModel(BaseModel):
-    title: str
-    text: str
-    published: bool | None = None
 
 
 @app.post("/blog")
