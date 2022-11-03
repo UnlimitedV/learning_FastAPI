@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Path
 
 from typing import Optional
 from enum import Enum
@@ -51,15 +51,14 @@ def get_model(model_name: ModelName):
     return {f"model_name is {model_name}"}
 
 
-@app.get("/items")
+@app.get("/items/{item_id}")
 def read_items(
-    q: list[str] = Query(
-        default=[],
-        max_length=10,
-        title="Query string",
-        description="Query string for the items to search in the database that have a good match",
-        alias="item-query",
-        deprecated=True,
-    )
+    *,
+    item_id: int = Path(title="The ID of the item to get", ge=0, le=1000),
+    q: str,
+    size: float = Query(gt=0, lt=10.5),
 ):
-    return {"q": q}
+    results = {"item_id": item_id}
+    if q:
+        results.update({"q": q})
+    return results
