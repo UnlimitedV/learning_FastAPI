@@ -1,9 +1,9 @@
-from fastapi import FastAPI, Query, Path
+from fastapi import FastAPI, Query, Path, Body
 
 from typing import Optional
 from enum import Enum
 
-from .schemas import BlogModel
+from .schemas import BlogModel, Item, User
 
 
 app = FastAPI()
@@ -62,3 +62,18 @@ def read_items(
     if q:
         results.update({"q": q})
     return results
+
+
+@app.put("/items/{item_id}")
+def update_item(
+    item_id,
+    item: Item,
+    user: User,
+    another: str = Body(),
+):
+    return {"item_id": item_id, "item": item, "user": user, "another": another}
+
+
+@app.put("/temp")
+def update_item(item: Item = Body(embed=True)):
+    return {"item": item}
