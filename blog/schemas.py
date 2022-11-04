@@ -1,10 +1,20 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, HttpUrl
 
 
 class BlogModel(BaseModel):
     title: str
     text: str
     published: bool | None = None
+
+
+class User(BaseModel):
+    username: str
+    full_name: str | None = None
+
+
+class Image(BaseModel):
+    url: HttpUrl
+    name: str
 
 
 class Item(BaseModel):
@@ -14,8 +24,12 @@ class Item(BaseModel):
     )
     price: float = Field(gt=0, description="The price must be greater than zero")
     tax: float | None = None
+    tags: set[str] = set()
+    images: list[Image] | None = None
 
 
-class User(BaseModel):
-    username: str
-    full_name: str | None = None
+class Offer(BaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    items: list[Item]

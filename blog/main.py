@@ -3,7 +3,7 @@ from fastapi import FastAPI, Query, Path, Body
 from typing import Optional
 from enum import Enum
 
-from .schemas import BlogModel, Item, User
+from .schemas import BlogModel, Item, User, Offer, Image
 
 
 app = FastAPI()
@@ -74,6 +74,16 @@ def update_item(
     return {"item_id": item_id, "item": item, "user": user, "another": another}
 
 
-@app.put("/temp")
-def update_item(item: Item = Body(embed=True)):
-    return {"item": item}
+@app.post("/images/multiple/")
+def create_multiple_images(images: list[Image]):
+    return {"images": images}
+
+
+@app.post("/offer")
+def create_offers(offer: Offer = Body(embed=True)):
+    return {"offer": offer}
+
+
+@app.post("/index-weights/")
+async def create_index_weights(weights: dict[int, float]):
+    return weights
