@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class BlogModel(BaseModel):
@@ -9,8 +9,10 @@ class BlogModel(BaseModel):
 
 class Item(BaseModel):
     name: str
-    description: str | None = None
-    price: float
+    description: str = Field(
+        default=None, title="the discription of the item", max_length=300
+    )
+    price: float = Field(gt=0, description="The price must be greater than zero")
     tax: float | None = None
 
 
