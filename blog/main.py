@@ -87,3 +87,8 @@ def create_offers(offer: Offer = Body(embed=True)):
 @app.post("/index-weights/")
 async def create_index_weights(weights: dict[int, float]):
     return weights
+
+
+@app.post("/item")
+def item(item: Item = Body()):
+    return item.json()
