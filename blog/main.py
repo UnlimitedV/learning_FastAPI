@@ -5,7 +5,7 @@ from enum import Enum
 from datetime import datetime, time, timedelta
 from uuid import UUID
 
-from .schemas import BlogModel, Item, User, Offer, Image
+from .schemas import BlogModel, Item, User, Offer, Image, UserIn, UserOut
 
 
 app = FastAPI()
@@ -108,3 +108,8 @@ async def read_items(
     user_agent: str | None = Header(default=None),
 ):
     return {"ads_id": ads_id, "User-Agent": user_agent}
+
+
+@app.post("/user/", response_model=UserOut)
+async def create_user(user: UserIn):
+    return user
