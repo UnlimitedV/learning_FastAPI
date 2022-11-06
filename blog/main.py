@@ -2,6 +2,8 @@ from fastapi import FastAPI, Query, Path, Body
 
 from typing import Optional
 from enum import Enum
+from datetime import datetime, time, timedelta
+from uuid import UUID
 
 from .schemas import BlogModel, Item, User, Offer, Image
 
@@ -65,13 +67,24 @@ def read_items(
 
 
 @app.put("/items/{item_id}")
-def update_item(
-    item_id,
-    item: Item,
-    user: User,
-    another: str = Body(),
+async def read_items(
+    item_id: UUID,
+    start_datetime: datetime | None = Body(default=None),
+    end_datetime: datetime | None = Body(default=None),
+    repeat_at: time | None = Body(default=None),
+    process_after: timedelta | None = Body(default=None),
 ):
-    return {"item_id": item_id, "item": item, "user": user, "another": another}
+    start_process = start_datetime + process_after
+    duration = end_datetime - start_process
+    return {
+        "item_id": item_id,
+        "start_datetime": start_datetime,
+        "end_datetime": end_datetime,
+        "repeat_at": repeat_at,
+        "process_after": process_after,
+        "start_process": start_process,
+        "duration": duration,
+    }
 
 
 @app.post("/images/multiple/")
