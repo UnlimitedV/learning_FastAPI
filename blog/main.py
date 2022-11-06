@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query, Path, Body
+from fastapi import FastAPI, Query, Path, Body, Cookie, Header
 
 from typing import Optional
 from enum import Enum
@@ -102,6 +102,9 @@ async def create_index_weights(weights: dict[int, float]):
     return weights
 
 
-@app.post("/item")
-def item(item: Item = Body()):
-    return item.json()
+@app.get("/items/")
+async def read_items(
+    ads_id: str | None = Cookie(default=None),
+    user_agent: str | None = Header(default=None),
+):
+    return {"ads_id": ads_id, "User-Agent": user_agent}
