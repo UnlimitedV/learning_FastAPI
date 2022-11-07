@@ -5,7 +5,7 @@ from enum import Enum
 from datetime import datetime, time, timedelta
 from uuid import UUID
 
-from .schemas import BlogModel, Item, User, Offer, Image, UserIn, UserOut
+from .schemas import BlogModel, Item, Offer, Image, UserIn, UserOut, UserInDB
 
 
 app = FastAPI()
@@ -43,9 +43,9 @@ def comments(id):
 
 
 class ModelName(str, Enum):
-    product = "blog"
-    colection = "comments"
-    category = "authors"
+    blog = "blog"
+    comments = "comments"
+    authors = "authors"
 
 
 @app.get("/model/{model_name}")
@@ -54,7 +54,7 @@ def get_model(model_name: ModelName):
 
 
 @app.get("/items/{item_id}")
-def read_items(
+def read_item(
     *,
     item_id: int = Path(title="The ID of the item to get", ge=0, le=1000),
     q: str,
@@ -67,7 +67,7 @@ def read_items(
 
 
 @app.put("/items/{item_id}")
-async def read_items(
+async def update_item(
     item_id: UUID,
     start_datetime: datetime | None = Body(default=None),
     end_datetime: datetime | None = Body(default=None),
@@ -110,6 +110,18 @@ async def read_items(
     return {"ads_id": ads_id, "User-Agent": user_agent}
 
 
+def fake_password_hasher(raw_password: str):
+    return "supersecret" + raw_password
+
+
+def fake_save_user(user_in: UserIn):
+    hashed_password = fake_password_hasher(user_in.password)
+    user_in_db = UserInDB(**user_in.dict(), hashed_password=hashed_password)
+    print("User saved! ..not really")
+    return user_in_db
+
+
 @app.post("/user/", response_model=UserOut)
-async def create_user(user: UserIn):
-    return user
+async def create_user(user_in: UserIn):
+    user_saved = fake_save_user(user_in)
+    return user_saved

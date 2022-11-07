@@ -7,11 +7,6 @@ class BlogModel(BaseModel):
     published: bool | None = None
 
 
-class User(BaseModel):
-    username: str
-    full_name: str | None = None
-
-
 class Image(BaseModel):
     url: HttpUrl
     name: str
@@ -45,14 +40,19 @@ class Offer(BaseModel):
     items: list[Item]
 
 
-class UserIn(BaseModel):
+class UserBase(BaseModel):
     username: str
+    email: EmailStr
+    full_name: str | None = None
+
+
+class UserIn(UserBase):
     password: str
-    email: EmailStr
-    full_name: str | None = None
 
 
-class UserOut(BaseModel):
-    username: str
-    email: EmailStr
-    full_name: str | None = None
+class UserOut(UserBase):
+    pass
+
+
+class UserInDB(UserBase):
+    hashed_password: str
