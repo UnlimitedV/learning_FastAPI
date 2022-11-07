@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query, Path, Body, Cookie, Header
+from fastapi import FastAPI, Query, Path, Body, Cookie, Header, Form
 
 from typing import Optional
 from enum import Enum
@@ -125,3 +125,8 @@ def fake_save_user(user_in: UserIn):
 async def create_user(user_in: UserIn):
     user_saved = fake_save_user(user_in)
     return user_saved
+
+
+@app.post("/login/")
+def login(username: str = Form(), password: str = Form()):
+    return {"username": username}
